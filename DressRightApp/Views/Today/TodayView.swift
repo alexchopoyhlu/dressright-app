@@ -1,10 +1,19 @@
 // TodayView.swift
 import SwiftUI
 
+extension View {
+    func navigationBarTitleTextColor(_ color: Color) -> some View {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(color)]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(color)]
+        return self
+    }
+}
+
 struct TodayView: View {
     @EnvironmentObject var userStore: UserStore
     @State private var outfit: Outfit?
     @State private var showingOutfitDetail = false
+    @State private var isGenerating = false
     
     var body: some View {
         NavigationView {
@@ -12,75 +21,107 @@ struct TodayView: View {
                 // Weather section
                 WeatherHeaderView()
                     .padding(.horizontal)
+                    .offset(x: 0, y: -35)
                 
-                // Outfit suggestion section
-                if let outfit = outfit {
-                    OutfitSuggestionView(outfit: outfit)
-                        .padding()
-                } else {
-                    VStack(spacing: 20) {
-                        Image(systemName: "tshirt")
-                            .font(.system(size: 80))
-                            .foregroundColor(.gray)
-                        
-                        Text("No outfit suggestions yet")
-                            .font(.title)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                        
-                        Text("Add clothes to your wardrobe to get started")
-                            .foregroundColor(.gray)
+                // Main content
+                if isGenerating {
+                    if let outfit = outfit {
+                        OutfitSuggestionView(outfit: outfit)
+                            .padding()
+                            .frame(height: 500)
+                            .offset(x: 0, y: 0)
+                    } else {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .frame(maxHeight: .infinity)
                     }
-                    .padding()
+                } else {
+                    // Generate button
+                    VStack {
+                        Spacer()
+                        Button(action: {
+                            isGenerating = true
+                            // Simulate loading time
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                outfit = userStore.getTodayOutfit()
+                            }
+                        }) {
+                            Text("Generate Today's Outfit")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        Spacer()
+                    }
                 }
                 
                 Spacer()
                 
-                // Action buttons
-                HStack(spacing: 12) {
-                    Button(action: {
-                        // Skip this outfit
-                    }) {
-                        Text("Skip")
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color(red: 0.2, green: 0.2, blue: 0.2))
-                            .cornerRadius(10)
+                // Action buttons (only show when outfit is generated)
+                if isGenerating && outfit != nil {
+                    HStack(spacing: 12) {
+                        Button(action: {
+                            // Skip this outfit
+                            isGenerating = false
+                            outfit = nil
+                        }) {
+                            Text("Skip")
+                                .fontWeight(.medium)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color(red: 0.2, green: 0.2, blue: 0.2))
+                                .cornerRadius(10)
+                        }
+                        
+                        Button(action: {
+                            self.showingOutfitDetail = true
+                        }) {
+                            Text("Wear Today")
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
                     }
-                    
-                    Button(action: {
-                        self.showingOutfitDetail = true
-                    }) {
-                        Text("Wear Today")
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    VStack(alignment: .leading) {
+                        Text("Today's")
+                            .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.blue)
-                            .cornerRadius(10)
+                        Text("Outfit")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
                     }
+                    .offset(x: 6, y: 25)
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
             }
-            .navigationTitle("Today's Outfit")
             .background(Color.black)
             .sheet(isPresented: $showingOutfitDetail) {
                 if let outfit = outfit {
                     OutfitDetailView(outfit: outfit)
                 }
             }
-            .onAppear {
-                outfit = userStore.getTodayOutfit()
-            }
         }
     }
 }
 
 struct WeatherHeaderView: View {
-    let temperature = "72°F"
+    let temperature = "23°C"
     let condition: WeatherCondition = .sunny
     
     var body: some View {
@@ -97,12 +138,13 @@ struct WeatherHeaderView: View {
                         .foregroundColor(.white)
                 }
                 
-                Text("Sunny today in New York")
+                Text("Sunny today in Newcastle")
                     .font(.subheadline)
                     .foregroundColor(.white)
             }
         }
         .padding(.vertical, 12)
+        .offset(x: -6, y: 12)
     }
 }
 
@@ -110,29 +152,34 @@ struct OutfitSuggestionView: View {
     let outfit: Outfit
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 45) {
             Text("Your outfit for today:")
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.bottom, 4)
             
             LazyVGrid(columns: [
-                GridItem(.flexible()),
-                GridItem(.flexible())
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16)
             ], spacing: 16) {
                 if let top = outfit.top {
                     ClothingItemView(item: top)
+                        .frame(height: 120)
                 }
                 if let bottom = outfit.bottom {
                     ClothingItemView(item: bottom)
+                        .frame(height: 120)
                 }
                 if let outerwear = outfit.outerwear {
                     ClothingItemView(item: outerwear)
+                        .frame(height: 120)
                 }
                 if let shoes = outfit.shoes {
                     ClothingItemView(item: shoes)
+                        .frame(height: 120)
                 }
             }
+            .padding(.horizontal, 8)
             
             if !outfit.accessories.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
@@ -141,13 +188,15 @@ struct OutfitSuggestionView: View {
                         .foregroundColor(.white)
                     
                     LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
+                        GridItem(.flexible(), spacing: 16),
+                        GridItem(.flexible(), spacing: 16)
                     ], spacing: 16) {
                         ForEach(outfit.accessories) { accessory in
                             ClothingItemView(item: accessory)
+                                .frame(height: 120)
                         }
                     }
+                    .padding(.horizontal, 8)
                 }
             }
         }
@@ -177,19 +226,56 @@ struct ClothingItemView: View {
                             .font(.system(size: 30))
                     }
                 case .bottoms:
-                    Image(systemName: "square.fill")
-                        .font(.system(size: 30))
-                        .rotationEffect(.degrees(90))
+                    if item.name.lowercased().contains("jeans") {
+                        Image("jeans", bundle: nil)
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(20)
+                    } else {
+                        Image(systemName: "square.fill")
+                            .font(.system(size: 30))
+                            .rotationEffect(.degrees(90))
+                    }
                 case .outerwear:
-                    Image(systemName: "rectangle.fill")
-                        .font(.system(size: 30))
+                    if item.name.lowercased().contains("hoodie") {
+                        Image("hoodie", bundle: nil)
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(20)
+                    } else {
+                        Image(systemName: "rectangle.fill")
+                            .font(.system(size: 30))
+                    }
                 case .shoes:
-                    Image(systemName: "bolt.horizontal.fill")
-                        .font(.system(size: 30))
-                        .rotationEffect(.degrees(-45))
+                    Image("shoes", bundle: nil)
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(.white)
+                        .aspectRatio(contentMode: .fit)
+                        .padding(20)
                 case .accessories:
-                    Image(systemName: item.category.icon)
-                        .font(.system(size: 30))
+                    if item.name.lowercased().contains("sunglasses") {
+                        Image("sunglasses", bundle: nil)
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(20)
+                    } else if item.name.lowercased().contains("hat") {
+                        Image("hat", bundle: nil)
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(20)
+                    } else {
+                        Image(systemName: item.category.icon)
+                            .font(.system(size: 30))
+                    }
                 case .dresses:
                     Image(systemName: "rectangle.fill")
                         .font(.system(size: 30))
@@ -210,7 +296,8 @@ struct ClothingItemView: View {
 
 struct TodayView_Previews: PreviewProvider {
     static var previews: some View {
-        TodayView()
+        MainTabView()
             .environmentObject(UserStore())
+            .preferredColorScheme(.dark)
     }
 }

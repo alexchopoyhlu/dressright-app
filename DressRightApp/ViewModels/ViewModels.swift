@@ -49,7 +49,8 @@ class UserStore: ObservableObject {
             ClothingItem(name: "Black Hoodie", category: .outerwear, color: "Black", imageURL: "hoodie_black"),
             ClothingItem(name: "Red Dress", category: .dresses, color: "Red", imageURL: "dress_red"),
             ClothingItem(name: "Sneakers", category: .shoes, color: "White", imageURL: "sneakers_white"),
-            ClothingItem(name: "Sunglasses", category: .accessories, color: "Black", imageURL: "sunglasses")
+            ClothingItem(name: "Sunglasses", category: .accessories, color: "Black", imageURL: "sunglasses"),
+            ClothingItem(name: "Baseball Hat", category: .accessories, color: "Navy", imageURL: "hat")
         ]
         
         // Sample outfit history
@@ -60,7 +61,7 @@ class UserStore: ObservableObject {
                 bottom: sampleWardrobe[1],
                 outerwear: nil,
                 shoes: sampleWardrobe[4],
-                accessories: [sampleWardrobe[5]],
+                accessories: [sampleWardrobe[5], sampleWardrobe[6]],
                 weather: .sunny,
                 isAccepted: true
             )

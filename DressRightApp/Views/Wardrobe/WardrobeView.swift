@@ -122,3 +122,11 @@ struct WardrobeItemCard: View {
         .shadow(color: Color.black.opacity(0.3), radius: 5)
     }
 }
+
+
+struct WardrobeView_Previews: PreviewProvider {
+    static var previews: some View {
+        WardrobeView()
+            .environmentObject(UserStore())
+    }
+}
