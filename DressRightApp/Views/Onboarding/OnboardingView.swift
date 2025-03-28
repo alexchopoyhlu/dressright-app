@@ -258,7 +258,7 @@ struct CustomPasswordField: View {
             Button(action: {
                 isPasswordVisible.toggle()
             }) {
-                Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                Image(systemName: isPasswordVisible ? "eye.fill" : "eye.slash.fill")
                     .foregroundColor(.gray)
                     .padding(.trailing, 10)
             }

@@ -30,8 +30,8 @@ enum ClothingCategory: String, CaseIterable, Identifiable {
         switch self {
         case .tops: return "tshirt"
         case .bottoms: return "square.fill"
-        case .outerwear: return "seal.fill"
-        case .dresses: return "person.crop.rectangle"
+        case .outerwear: return "rectangle.fill"
+        case .dresses: return "rectangle.fill"
         case .shoes: return "bolt.horizontal.fill"
         case .accessories: return "circle.grid.cross"
         }
