@@ -11,8 +11,10 @@ struct HistoryView: View {
                     OutfitHistoryRow(outfit: outfit)
                 }
             }
-            .navigationTitle("Outfit History")
+            .listStyle(PlainListStyle())
             .background(Color.black)
+            .navigationTitle("Outfit History")
+            .navigationBarTitleDisplayMode(.large)
         }
     }
 }
@@ -27,7 +29,7 @@ struct OutfitHistoryRow: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(dateFormatter.string(from: outfit.date))
                     .font(.headline)
                     .foregroundColor(.white)
@@ -36,27 +38,27 @@ struct OutfitHistoryRow: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
+            .padding(.leading, 12)
             
             Spacer()
             
-            HStack(spacing: 0) {
-                if let top = outfit.top {
-                    Image(systemName: "tshirt")
-                        .foregroundColor(.blue)
-                }
-                
-                if let bottom = outfit.bottom {
-                    Image(systemName: "square.fill")
-                        .foregroundColor(.blue)
-                }
-                
-                if let outerwear = outfit.outerwear {
-                    Image(systemName: "seal.fill")
-                        .foregroundColor(.blue)
-                }
+            HStack(spacing: 8) {
+                Image(systemName: outfit.weather.icon)
+                    .font(.system(size: 24))
+                    .foregroundColor(outfit.weather.color)
             }
+            .padding(.trailing, 12)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
         .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+        .cornerRadius(10)
+    }
+}
+
+struct HistoryView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainTabView()
+            .environmentObject(UserStore())
+            .preferredColorScheme(.dark)
     }
 }

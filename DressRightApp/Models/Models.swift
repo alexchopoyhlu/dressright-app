@@ -30,10 +30,10 @@ enum ClothingCategory: String, CaseIterable, Identifiable {
         switch self {
         case .tops: return "tshirt"
         case .bottoms: return "square.fill"
-        case .outerwear: return "rectangle.fill"
+        case .outerwear: return "jacket"
         case .dresses: return "rectangle.fill"
-        case .shoes: return "bolt.horizontal.fill"
-        case .accessories: return "circle.grid.cross"
+        case .shoes: return "shoe.2"
+        case .accessories: return "hat.cap"
         }
     }
 }
@@ -91,8 +91,8 @@ enum SubscriptionTier: String {
     
     var price: String {
         switch self {
-        case .basic: return "$4.99/month"
-        case .premium: return "$9.99/month"
+        case .basic: return "£4.99/month"
+        case .premium: return "£9.99/month"
         }
     }
 }

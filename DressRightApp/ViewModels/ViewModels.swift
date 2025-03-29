@@ -4,12 +4,14 @@ import SwiftUI
 import Combine
 
 class UserStore: ObservableObject {
-    @Published var isLoggedIn = false
     @Published var name: String = ""
     @Published var email: String = ""
+    @Published var password: String = ""
+    @Published var isLoggedIn: Bool = false
     @Published var subscriptionTier: SubscriptionTier = .basic
     @Published var wardrobe: [ClothingItem] = []
     @Published var outfitHistory: [Outfit] = []
+    @Published var profileImage: UIImage?
     
     init() {
         // For demo purposes, we'll add some sample data
@@ -23,7 +25,9 @@ class UserStore: ObservableObject {
     }
     
     func logout() {
-        self.isLoggedIn = false
+        isLoggedIn = false
+        // Clear sensitive data
+        password = ""
     }
     
     func signup(name: String, email: String, password: String) {
@@ -88,5 +92,15 @@ class UserStore: ObservableObject {
         )
         
         return outfit
+    }
+    
+    func updateProfileImage(_ image: UIImage) {
+        profileImage = image
+        // In a real app, you would also save this to persistent storage
+    }
+    
+    func removeProfileImage() {
+        profileImage = nil
+        // In a real app, you would also remove this from persistent storage
     }
 }

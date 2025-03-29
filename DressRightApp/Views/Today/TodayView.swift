@@ -148,7 +148,17 @@ struct TodayView: View {
                     .offset(x: 6, y: 25)
                 }
             }
-            .background(Color.black)
+            .background(
+                ZStack {
+                    Image("today_background")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    Color.black.opacity(0.3)
+                        .edgesIgnoringSafeArea(.all)
+                }
+            )
             .sheet(isPresented: $showingOutfitDetail) {
                 if let outfit = outfit {
                     OutfitDetailView(outfit: outfit)
@@ -332,6 +342,7 @@ struct ClothingItemView: View {
     }
 }
 
+@available(iOS 18.0, *)
 struct TodayView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabView()
