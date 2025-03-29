@@ -62,9 +62,9 @@ struct EditProfileView: View {
                                 .clipShape(Circle())
                                 .overlay(Circle().stroke(Color.blue, lineWidth: 2))
                         } else {
-                            Image(systemName: "person.circle.fill")
-                                .font(.system(size: 80))
-                                .foregroundColor(.blue)
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 80))
+                        .foregroundColor(.blue)
                         }
                         
                         Button(action: {
@@ -118,7 +118,7 @@ struct EditProfileView: View {
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         Text("Save Changes")
-                            .fontWeight(.bold)
+                        .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -315,118 +315,156 @@ struct ProfileView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                // Profile header
-                VStack(spacing: 20) {
-                    if let profileImage = userStore.profileImage {
-                        Image(uiImage: profileImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.blue, lineWidth: 2))
-                    } else {
-                        Image(systemName: "person.circle.fill")
-                            .font(.system(size: 80))
-                            .foregroundColor(.blue)
-                    }
-                    
-                    Text(userStore.name.isEmpty ? "No name set" : userStore.name)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                    
-                    Text(userStore.email.isEmpty ? "No email set" : userStore.email)
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Profile header
+                        VStack(spacing: 20) {
+                            if let profileImage = userStore.profileImage {
+                                Image(uiImage: profileImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+                            } else {
+                                Image(systemName: "person.circle.fill")
+                                    .font(.system(size: 80))
+                                    .foregroundColor(.blue)
+                            }
+                            
+                            Text(userStore.name.isEmpty ? "No name set" : userStore.name)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            
+                            Text(userStore.email.isEmpty ? "No email set" : userStore.email)
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                        .onAppear {
-                            print("Current email: \(userStore.email)")
-                        }
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                        .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                        .cornerRadius(10)
+                        .padding(.horizontal)
                 
                 // Subscription section
-                Section(header: Text("Subscription").foregroundColor(.white)) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Subscription")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                            
+                            VStack(spacing: 12) {
                     HStack {
                         Text("Your Plan")
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                         Spacer()
                         Text(userStore.subscriptionTier.rawValue)
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                     }
                     
                     HStack {
                         Text("Daily Outfit Suggestions")
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                         Spacer()
                         Text("\(userStore.subscriptionTier.outfitSuggestionsPerDay)")
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                     }
                     
                     HStack {
                         Text("Price")
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                         Spacer()
                         Text(userStore.subscriptionTier.price)
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                     }
                     
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            // Upgrade subscription
-                        }) {
-                            Text(userStore.subscriptionTier == .basic ? "Upgrade to Premium" : "Manage Subscription")
-                                .modifier(AnimatedMeshGradientButton(
-                                    width: UIScreen.main.bounds.width - 190,
-                                    height: 30,
-                                    cornerRadius: 10
-                                ))
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    }
+                    Button(action: {
+                        // Upgrade subscription
+                    }) {
+                        Text(userStore.subscriptionTier == .basic ? "Upgrade to Premium" : "Manage Subscription")
+                                        .modifier(AnimatedMeshGradientButton(
+                                            width: UIScreen.main.bounds.width - 190,
+                                            height: 30,
+                                            cornerRadius: 10
+                                        ))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            .padding()
+                            .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                 }
                 
                 // Wardrobe stats
-                Section(header: Text("Wardrobe Stats").foregroundColor(.white)) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Wardrobe Stats")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                            
+                            VStack(spacing: 12) {
                     HStack {
                         Text("Total Items")
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
                         Spacer()
                         Text("\(userStore.wardrobe.count)")
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                                        .foregroundColor(.white)
+                                }
+                                
+                                HStack {
+                                    Text("Saved Outfits")
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                    Text("\(userStore.outfitHistory.count)")
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .padding()
+                            .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                        }
+                        
+                        // Settings
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Settings")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                            
+                            VStack(spacing: 12) {
+                    Button(action: {
+                                    showingEditProfile = true
+                                }) {
+                                    HStack {
+                                        Text("Modify Profile")
+                                            .foregroundColor(.white)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
                     }
                     
-                    HStack {
-                        Text("Saved Outfits")
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(userStore.outfitHistory.count)")
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                    }
-                }
-                
-                // App settings
-                Section(header: Text("Settings").foregroundColor(.white)) {
                     Button(action: {
-                        showingEditProfile = true
+                                    showingPrivacySettings = true
                     }) {
-                        Text("Modify Profile")
-                            .foregroundColor(.white)
-                    }
-                    
-                    Button(action: {
-                        showingPrivacySettings = true
-                    }) {
+                                    HStack {
                         Text("Privacy Settings")
-                            .foregroundColor(.white)
+                                            .foregroundColor(.white)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
                     }
                     
                     Button(action: {
@@ -437,6 +475,14 @@ struct ProfileView: View {
                             .foregroundColor(.red)
                     }
                 }
+                            .padding()
+                            .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                        }
+                    }
+                    .padding(.vertical)
+                }
             }
             .sheet(isPresented: $showingEditProfile) {
                 EditProfileView(userStore: userStore)
@@ -445,7 +491,10 @@ struct ProfileView: View {
                 PrivacySettingsView()
             }
             .navigationTitle("Profile")
-            .background(Color.black)
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(Color.black, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 }

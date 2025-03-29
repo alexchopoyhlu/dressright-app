@@ -3,6 +3,7 @@ import SwiftUI
 struct OutfitDetailView: View {
     let outfit: Outfit
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var userStore: UserStore
     @State private var scrollOffset: CGFloat = 0
     
     // Adjust these values to control positioning
@@ -110,6 +111,10 @@ struct OutfitDetailView: View {
                     }
                     
                     Button(action: {
+                        // Create a new outfit with isAccepted set to true
+                        var confirmedOutfit = outfit
+                        confirmedOutfit.isAccepted = true
+                        userStore.outfitHistory.append(confirmedOutfit)
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         Text("Confirm Outfit")
