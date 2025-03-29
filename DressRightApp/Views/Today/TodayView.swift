@@ -9,11 +9,32 @@ extension View {
     }
 }
 
+struct GenerateButtonStyle: ViewModifier {
+    let width: CGFloat
+    let height: CGFloat
+    let cornerRadius: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .font(.headline)
+            .foregroundColor(.white)
+            .frame(width: width, height: height)
+            .background(Color.blue)
+            .cornerRadius(cornerRadius)
+    }
+}
+
 struct TodayView: View {
     @EnvironmentObject var userStore: UserStore
     @State private var outfit: Outfit?
     @State private var showingOutfitDetail = false
     @State private var isGenerating = false
+    @State private var appearAnimation = false
+    
+    // Add customizable button properties
+    private let generateButtonWidth: CGFloat = 250  // Adjust this value
+    private let generateButtonHeight: CGFloat = 55  // Adjust this value
+    private let generateButtonCornerRadius: CGFloat = 80  // Adjust this value
     
     var body: some View {
         NavigationView {
@@ -30,34 +51,42 @@ struct TodayView: View {
                             .padding()
                             .frame(height: 500)
                             .offset(x: 0, y: 0)
+                            .opacity(appearAnimation ? 1 : 0)
+                            .scaleEffect(appearAnimation ? 1 : 0.9)
+                            .animation(.spring(response: 1.0, dampingFraction: 0.8, blendDuration: 0), value: appearAnimation)
                     } else {
                         ProgressView()
                             .scaleEffect(1.5)
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                             .frame(maxHeight: .infinity)
+                            .transition(.opacity)
                     }
                 } else {
                     // Generate button
                     VStack {
                         Spacer()
                         Button(action: {
-                            isGenerating = true
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                isGenerating = true
+                            }
                             // Simulate loading time
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 outfit = userStore.getTodayOutfit()
+                                withAnimation {
+                                    appearAnimation = true
+                                }
                             }
                         }) {
                             Text("Generate Today's Outfit")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(Color.blue)
-                                .cornerRadius(10)
+                                .modifier(GenerateButtonStyle(
+                                    width: generateButtonWidth,
+                                    height: generateButtonHeight,
+                                    cornerRadius: generateButtonCornerRadius
+                                ))
                         }
-                        .padding(.horizontal)
                         Spacer()
                     }
+                    .transition(.opacity)
                 }
                 
                 Spacer()
@@ -66,16 +95,21 @@ struct TodayView: View {
                 if isGenerating && outfit != nil {
                     HStack(spacing: 12) {
                         Button(action: {
-                            // Skip this outfit
-                            isGenerating = false
-                            outfit = nil
+                            withAnimation {
+                                appearAnimation = false
+                            }
+                            // Reset after animation
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                isGenerating = false
+                                outfit = nil
+                            }
                         }) {
                             Text("Skip")
                                 .fontWeight(.medium)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
-                                .background(Color(red: 0.2, green: 0.2, blue: 0.2))
+                                .background(Color(red: 0.6, green: 0.1, blue: 0.0))
                                 .cornerRadius(10)
                         }
                         
@@ -93,6 +127,9 @@ struct TodayView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom)
+                    .opacity(appearAnimation ? 1 : 0)
+                    .offset(y: appearAnimation ? 0 : 20)
+                    .animation(.spring(response: 1.3, dampingFraction: 0.8, blendDuration: 0).delay(0.2), value: appearAnimation)
                 }
             }
             .toolbar {
