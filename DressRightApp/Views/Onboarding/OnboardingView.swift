@@ -16,8 +16,14 @@ struct OnboardingView: View {
                 // Welcome page
                 VStack(spacing: 20) {
                     Image(systemName: "hanger")
-                        .font(.system(size: 100))
-                        .foregroundColor(.blue)
+                        .font(.system(size: 100, weight: .black))
+                        .foregroundStyle(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [.pink, .indigo, .blue]),
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
                     
                     Text("Welcome to DressRight")
                         .font(.largeTitle)
@@ -64,7 +70,7 @@ struct OnboardingView: View {
                 .tag(1)
                 
                 // Sign up page
-                VStack(spacing: 20) {
+                VStack(alignment: .center, spacing: 20) {
                     Text("Create Your Account")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -131,10 +137,11 @@ struct OnboardingView: View {
             }
             .tabViewStyle(PageTabViewStyle())
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode:   .always))
-            .animation(.easeInOut(duration: 0.6), value: currentPage)
+            .animation(.easeInOut(duration: 0.9), value: currentPage)
             
             if currentPage < 2 {
                 Button(action: {
+                    UIImpactFeedbackGenerator.lightImpact()
                     withAnimation {
                         currentPage += 1
                     }
@@ -164,6 +171,10 @@ struct SubscriptionCard: View {
     
     var body: some View {
         Button(action: {
+            
+            // Haptic feedback on selection
+            UIImpactFeedbackGenerator.rigidImpact()
+            
             withAnimation(.spring(response: 0.7, dampingFraction: 0.6)) {
                 onTap()
             }
@@ -188,7 +199,7 @@ struct SubscriptionCard: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green)
                         Text(feature)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
                     }
                 }
             }

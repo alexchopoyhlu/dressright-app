@@ -34,7 +34,7 @@ struct TodayView: View {
     // Add customizable button properties
     private let generateButtonWidth: CGFloat = 250  // Adjust this value
     private let generateButtonHeight: CGFloat = 55  // Adjust this value
-    private let generateButtonCornerRadius: CGFloat = 80  // Adjust this value
+    private let generateButtonCornerRadius: CGFloat = 35  // Adjust this value
     
     var body: some View {
         NavigationView {
@@ -66,6 +66,7 @@ struct TodayView: View {
                     VStack {
                         Spacer()
                         Button(action: {
+                            UIImpactFeedbackGenerator.rigidImpact()
                             withAnimation(.easeOut(duration: 0.3)) {
                                 isGenerating = true
                             }
@@ -78,7 +79,7 @@ struct TodayView: View {
                             }
                         }) {
                             Text("Generate Today's Outfit")
-                                .modifier(GenerateButtonStyle(
+                                .modifier(AnimatedMeshGradientButton(
                                     width: generateButtonWidth,
                                     height: generateButtonHeight,
                                     cornerRadius: generateButtonCornerRadius

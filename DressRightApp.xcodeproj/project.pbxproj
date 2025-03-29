@@ -21,6 +21,8 @@
 		FA0F77512D97320E006E4941 /* AddClothingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0F77502D97320E006E4941 /* AddClothingItemView.swift */; };
 		FA0F77532D973237006E4941 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0F77522D973237006E4941 /* HistoryView.swift */; };
 		FA0F77552D973244006E4941 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0F77542D973244006E4941 /* ProfileView.swift */; };
+		FA0F775B2D977823006E4941 /* AnimatedMeshGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0F775A2D977823006E4941 /* AnimatedMeshGradient.swift */; };
+		FA0F775D2D977E74006E4941 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0F775C2D977E74006E4941 /* HapticManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		FA0F77502D97320E006E4941 /* AddClothingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClothingItemView.swift; sourceTree = "<group>"; };
 		FA0F77522D973237006E4941 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		FA0F77542D973244006E4941 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		FA0F775A2D977823006E4941 /* AnimatedMeshGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedMeshGradient.swift; sourceTree = "<group>"; };
+		FA0F775C2D977E74006E4941 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,7 @@
 		FA0F77282D972FBC006E4941 /* DressRightApp */ = {
 			isa = PBXGroup;
 			children = (
+				FA0F77582D9777ED006E4941 /* Utilities */,
 				FA0F77382D973013006E4941 /* Models */,
 				FA0F77392D973018006E4941 /* ViewModels */,
 				FA0F77372D973002006E4941 /* App */,
@@ -177,6 +182,15 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		FA0F77582D9777ED006E4941 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FA0F775A2D977823006E4941 /* AnimatedMeshGradient.swift */,
+				FA0F775C2D977E74006E4941 /* HapticManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -249,12 +263,14 @@
 			files = (
 				FA0F773C2D973068006E4941 /* Models.swift in Sources */,
 				FA0F774F2D973201006E4941 /* WardrobeView.swift in Sources */,
+				FA0F775D2D977E74006E4941 /* HapticManager.swift in Sources */,
 				FA0F772C2D972FBC006E4941 /* ContentView.swift in Sources */,
 				FA0F774D2D9731BE006E4941 /* OutfitDetailView.swift in Sources */,
 				FA0F77552D973244006E4941 /* ProfileView.swift in Sources */,
 				FA0F773E2D97308B006E4941 /* ViewModels.swift in Sources */,
 				FA0F77532D973237006E4941 /* HistoryView.swift in Sources */,
 				FA0F77512D97320E006E4941 /* AddClothingItemView.swift in Sources */,
+				FA0F775B2D977823006E4941 /* AnimatedMeshGradient.swift in Sources */,
 				FA0F774B2D9731AE006E4941 /* TodayView.swift in Sources */,
 				FA0F77472D97310F006E4941 /* OnboardingView.swift in Sources */,
 				FA0F772A2D972FBC006E4941 /* DressRightAppApp.swift in Sources */,
