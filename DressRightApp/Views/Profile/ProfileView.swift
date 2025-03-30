@@ -39,6 +39,7 @@ struct EditProfileView: View {
     @State private var showingImageOptions = false
     @State private var selectedImage: UIImage?
     @State private var showingDeleteConfirmation = false
+    @State private var imageSourceType: UIImagePickerController.SourceType = .photoLibrary
     
     init(userStore: UserStore) {
         _name = State(initialValue: userStore.name)
@@ -137,7 +138,7 @@ struct EditProfileView: View {
             }
             .foregroundColor(.white))
             .sheet(isPresented: $showingImagePicker) {
-                ImagePicker(image: $selectedImage)
+                ImagePicker(image: $selectedImage, sourceType: imageSourceType)
             }
             .actionSheet(isPresented: $showingImageOptions) {
                 ActionSheet(
@@ -145,9 +146,11 @@ struct EditProfileView: View {
                     message: Text("Choose an option"),
                     buttons: [
                         .default(Text("Take Photo")) {
+                            imageSourceType = .camera
                             showingImagePicker = true
                         },
                         .default(Text("Choose from Library")) {
+                            imageSourceType = .photoLibrary
                             showingImagePicker = true
                         },
                         .destructive(Text("Remove Photo")) {
@@ -170,42 +173,6 @@ struct EditProfileView: View {
             }
         }
         .preferredColorScheme(.dark)
-    }
-}
-
-struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var image: UIImage?
-    @Environment(\.presentationMode) var presentationMode
-    
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: ImagePicker
-        
-        init(_ parent: ImagePicker) {
-            self.parent = parent
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.image = image
-            }
-            parent.presentationMode.wrappedValue.dismiss()
-        }
-        
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.presentationMode.wrappedValue.dismiss()
-        }
     }
 }
 
