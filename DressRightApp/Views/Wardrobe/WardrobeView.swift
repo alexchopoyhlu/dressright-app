@@ -38,6 +38,10 @@ struct WardrobeView: View {
                 }
             }
             .navigationTitle("My Wardrobe")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(Color.black, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarItems(trailing: Button(action: {
                 showingAddItemSheet = true
             }) {
@@ -68,8 +72,37 @@ struct CategoryButton: View {
     var body: some View {
         Button(action: action) {
             VStack {
-                Image(systemName: category.icon)
-                    .font(.title2)
+                Group {
+                    switch category {
+                    case .bottoms:
+                        Image("pants")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                    case .outerwear:
+                        Image("jacket")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                    case .dresses:
+                        Image("dress")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                    case .accessories:
+                        Image("sunglasses")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                    default:
+                        Image(systemName: category.icon)
+                            .font(.title2)
+                    }
+                }
                 
                 Text(category.rawValue)
                     .font(.caption)
