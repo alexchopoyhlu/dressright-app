@@ -7,7 +7,7 @@ struct OnboardingView: View {
     @State private var name = ""
     @State private var email = ""
     @State private var password = ""
-    @State private var selectedPlan = "Standard"
+    @State private var selectedPlan = "Basic"
     @State private var isPasswordVisible = false
     
     var body: some View {
@@ -50,11 +50,11 @@ struct OnboardingView: View {
                     
                     VStack(spacing: 25) {
                         SubscriptionCard(
-                            title: "Standard",
+                            title: "Basic",
                             price: "£4.99/month",
                             features: ["1 outfit suggestion per day", "Wardrobe management", "Weather-based recommendations"],
-                            isSelected: selectedPlan == "Standard",
-                            onTap: { selectedPlan = "Standard" }
+                            isSelected: selectedPlan == "Basic",
+                            onTap: { selectedPlan = "Basic" }
                         )
                         
                         SubscriptionCard(
@@ -102,21 +102,30 @@ struct OnboardingView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Apple Sign-In Button
-                    SignInWithAppleButton(.signIn) { request in
-                        request.requestedScopes = [.fullName, .email]
-                    } onCompletion: { result in
-                        switch result {
-                        case .success(let authResults):
-                            print("Apple Sign-In Successful: \(authResults)")
-                            // Handle successful sign-in
-                        case .failure(let error):
-                            print("Apple Sign-In Failed: \(error.localizedDescription)")
-                        }
+                    HStack {
+                        VStack { Divider().background(Color.gray) }
+                        Text("or")
+                            .foregroundColor(.gray)
+                            .font(.subheadline)
+                        VStack { Divider().background(Color.gray) }
                     }
-                    .signInWithAppleButtonStyle(.whiteOutline)
-                    .frame(height: 50)
-                    .cornerRadius(10)
+                    .padding(.horizontal)
+                    
+                    Button(action: {
+                        // Handle Apple sign in
+                    }) {
+                        HStack {
+                            Image(systemName: "apple.logo")
+                                .foregroundColor(.black)
+                            Text("Sign in with Apple")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.white)
+                        .cornerRadius(10)
+                    }
                     .padding(.horizontal)
                     
                     HStack {

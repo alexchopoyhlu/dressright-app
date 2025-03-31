@@ -3,38 +3,41 @@ import SwiftUI
 
 struct WardrobeView: View {
     @EnvironmentObject var userStore: UserStore
-    @State private var selectedCategory: ClothingCategory?
+    @State private var selectedCategory: String = "All"
     @State private var showingAddItemSheet = false
     
     var body: some View {
         NavigationView {
-            VStack {
-                // Category selection
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 15) {
-                        ForEach(ClothingCategory.allCases) { category in
-                            CategoryButton(
-                                category: category,
-                                isSelected: selectedCategory == category,
-                                action: {
-                                    selectedCategory = category
-                                }
-                            )
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.vertical)
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
                 
-                // Clothing items grid
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
-                        ForEach(filteredItems) { item in
-                            WardrobeItemCard(item: item)
-                                .frame(height: 180)
+                VStack(spacing: 0) {
+                    // Category Selection
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(["All"] + ClothingCategory.allCases.map { $0.rawValue }, id: \.self) { category in
+                                CategoryButton(
+                                    title: category,
+                                    isSelected: selectedCategory == category,
+                                    action: { selectedCategory = category }
+                                )
+                            }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding()
+                    .padding(.vertical, 8)
+                    .background(Color.black)
+                    
+                    // Clothing items grid
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
+                            ForEach(filteredItems) { item in
+                                WardrobeItemCard(item: item)
+                                    .frame(height: 180)
+                            }
+                        }
+                        .padding()
+                    }
                 }
             }
             .navigationTitle("My Wardrobe")
@@ -51,21 +54,19 @@ struct WardrobeView: View {
             .sheet(isPresented: $showingAddItemSheet) {
                 AddClothingItemView()
             }
-            .background(Color.black)
         }
     }
     
-    var filteredItems: [ClothingItem] {
-        if let category = selectedCategory {
-            return userStore.wardrobe.filter { $0.category == category }
-        } else {
+    private var filteredItems: [ClothingItem] {
+        if selectedCategory == "All" {
             return userStore.wardrobe
         }
+        return userStore.wardrobe.filter { $0.category.rawValue == selectedCategory }
     }
 }
 
 struct CategoryButton: View {
-    let category: ClothingCategory
+    let title: String
     let isSelected: Bool
     let action: () -> Void
     
@@ -73,41 +74,52 @@ struct CategoryButton: View {
         Button(action: action) {
             VStack {
                 Group {
-                    switch category {
-                    case .bottoms:
-                        Image("pants")
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                    case .outerwear:
-                        Image("jacket")
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                    case .dresses:
-                        Image("dress")
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                    case .accessories:
-                        Image("sunglasses")
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                    default:
-                        Image(systemName: category.icon)
+                    if title == "All" {
+                        Image(systemName: "square.grid.2x2")
                             .font(.title2)
+                    } else {
+                        switch ClothingCategory(rawValue: title) {
+                        case .tops:
+                            Image(systemName: "tshirt")
+                                .font(.title2)
+                        case .bottoms:
+                            Image("pants")
+                                .resizable()
+                                .renderingMode(.template)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                        case .outerwear:
+                            Image("jacket")
+                                .resizable()
+                                .renderingMode(.template)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                        case .dresses:
+                            Image("dress")
+                                .resizable()
+                                .renderingMode(.template)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                        case .shoes:
+                            Image(systemName: "shoe.2")
+                                .font(.title2)
+                        case .accessories:
+                            Image("sunglasses")
+                                .resizable()
+                                .renderingMode(.template)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                        case .none:
+                            EmptyView()
+                        }
                     }
                 }
+                .foregroundColor(isSelected ? .white : .gray)
                 
-                Text(category.rawValue)
+                Text(title)
                     .font(.caption)
+                    .foregroundColor(isSelected ? .white : .gray)
             }
-            .foregroundColor(isSelected ? .white : .gray)
             .frame(width: 80, height: 80)
             .background(isSelected ? Color.blue : Color(red: 0.2, green: 0.2, blue: 0.2))
             .cornerRadius(10)
