@@ -11,7 +11,7 @@ DressRight is an AI-powered outfit assistant that helps you look your best every
 - Dark mode support
 - Modern SwiftUI interface
 
-## Features
+## Gallery
 <img src="https://github.com/user-attachments/assets/63f2f61e-a86c-4441-a748-131ea14ee05f" width="165">
 <img src="https://github.com/user-attachments/assets/96469b97-6dea-4511-bc1b-4575fb64ce86" width="165">
 <img src="https://github.com/user-attachments/assets/8408dbf5-6221-4b43-b2bd-fa0088bf9918" width="165">
