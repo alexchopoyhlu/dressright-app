@@ -1,4 +1,4 @@
-# DressRight App
+# DressRight App (WIP)
 
 DressRight is an AI-powered outfit assistant that helps you look your best every day based on the weather and your personal style.
 
