@@ -2,15 +2,6 @@
 
 DressRight is an AI-powered outfit assistant that helps you look your best every day based on the weather and your personal style.
 
-## Features
-
-- Weather-based outfit suggestions
-- Wardrobe management
-- Daily outfit recommendations
-- Premium outfit analytics (Premium tier)
-- Dark mode support
-- Modern SwiftUI interface
-
 ## Gallery
 <img src="https://github.com/user-attachments/assets/63f2f61e-a86c-4441-a748-131ea14ee05f" width="165">
 <img src="https://github.com/user-attachments/assets/96469b97-6dea-4511-bc1b-4575fb64ce86" width="165">
@@ -19,6 +10,14 @@ DressRight is an AI-powered outfit assistant that helps you look your best every
 <img src="https://github.com/user-attachments/assets/26eb2ec7-e96f-44ee-919e-57c5b89bb8fa" width="165">
 <img src="https://github.com/user-attachments/assets/895272ea-567d-4be0-a99d-5c7c3114c6c1" width="165">
 
+## Features
+
+- Weather-based outfit suggestions
+- Wardrobe management
+- Daily outfit recommendations
+- Premium outfit analytics (Premium tier)
+- Dark mode support
+- Modern SwiftUI interface
 
 ## Requirements
 
